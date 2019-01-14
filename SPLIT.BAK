@@ -1,0 +1,113 @@
+/*****************************************************************************
+
+		Copyright (c) My Company
+
+ Project:  EURAKA
+ FileName: SPLIT.PRO
+ Purpose: No description
+ Written by: Visual Prolog
+ Comments:
+******************************************************************************/
+
+
+include "c:/aparna/transducer.pro"
+predicates
+   %recognize(node,string)
+   writeoutput(string,string)
+   traverse(string, string, string)  
+   vowel(string)
+   vowel_a(string)
+   vowel_e(string)
+   vowel_i(string)
+   vowel_u(string)
+   vowel_o(string)
+   split_generator(string,string,string)
+   vichcheda(integer,string)
+   
+clauses
+    vowel("a").
+    vowel("A").
+    vowel("i").
+    vowel("I").
+    vowel("u").
+    vowel("U").
+    vowel("e").
+    vowel("E").
+    vowel("o").
+    vowel("O").
+    vowel_a(X):-X="a";X="A".
+    vowel_e(X):-X="e";X="E".
+    vowel_i(X):-X="i";X="I".
+    vowel_u(X):-X="u";X="U".
+    vowel_o(X):-X="o";X="O".
+
+%recognition of the word
+
+   /*recognize(Node1,OldString):-
+   	arc(Node1,Node2,Label),
+   	searchstring(OldString, Label, X), X=1,
+   	traverse(Label,OldString,NewString),
+   	recognize(Node2,NewString).
+   recognize(Node1,""):- final(Node1).*/
+   
+    
+   
+traverse(Label,OldString,NewString):-
+   str_len(Label,Y),
+   str_len(OldString,Z),
+   D=Z-Y,
+   N=Y+1,
+   substring(OldString, N, D, NewString).
+   
+      
+writeoutput(Str, Filename):-
+   openappend(output1, Filename),
+   writedevice(output1),
+   write(Str),
+   closefile(output1).
+
+% Sandhi rules and the split generator
+ split_generator(Compound,S1,S2):-
+    Compound="A",vowel_a(S1),vowel_a(S2);
+    Compound="I",vowel_i(S1),vowel_i(S2);
+    Compound="U",vowel_u(S1),vowel_u(S2);
+    Compound="e",vowel_a(S1),vowel_i(S2);
+    Compound="e",S1="a",S2="e";
+    Compound="e",S1="e",S2="a";
+    Compound="E",vowel_a(S1),vowel_e(S2);
+    Compound="o",vowel_a(S1),vowel_u(S2);
+    Compound="o",S1="a",S2="o";
+    Compound="o",S1="o",S2="a";
+    Compound="O",vowel_a(S1),vowel_o(S2);
+    Compound="r",vowel_a(S1),S2="q";
+    Compound="y",vowel_i(S1),vowel(S2);
+    Compound="v",vowel_u(S1),vowel(S2);
+    Compound="ay",S1="e",vowel(S2);
+    Compound="av",S1="o",vowel(S2);
+    Compound="Ay",S1="E",vowel(S2);
+    Compound="Av",S1="O",vowel(S2).
+vichcheda(Node1,OldString):-
+    arc(Node1,Node2,Label,_),
+    searchstring(OldString, Label, X), X=1,
+    writeoutput(Label,"c:/aparna/intermediate.txt"),
+    traverse(Label,OldString,NewString),
+    vichcheda(Node2,NewString),!;
+    prefinal(Node1),
+    frontstr(1,OldString,Y,Next),
+    split_generator(Y,First,Last),
+    arc(Node1,_,First,_),
+    writeoutput(First,"c:/aparna/intermediate.txt"),
+    writeoutput(" ","c:/aparna/intermediate.txt"),
+    concat(Last,Next,NewString),
+    vichcheda(1,NewString),!;
+    prefinal(Node1),
+    frontstr(2,OldString,Y,Next),
+    split_generator(Y,First,Last),
+    arc(Node1,_,First,_),
+    writeoutput(First,"c:/aparna/intermediate.txt"),
+    writeoutput(" ","c:/aparna/intermediate.txt"),
+    writeoutput(Last,"c:/aparna/intermediate.txt"),
+    concat(Last,Next,NewString),
+    vichcheda(1,NewString),!.
+vichcheda(Node1,""):- final(Node1),!.
+    

@@ -1,0 +1,17 @@
+/*****************************************************************************
+
+		Copyright (c) My Company
+
+ Project:  APARNA
+ FileName: TRANSDUCER.PRE
+ Purpose: Predicate definitions for TRANSDUCER.PRO
+ Written by: Visual Prolog
+ Comments:
+******************************************************************************/
+
+
+global predicates
+   arc(integer,integer,string,string)
+   %initial(integer)
+   final(integer)
+   prefinal(integer)

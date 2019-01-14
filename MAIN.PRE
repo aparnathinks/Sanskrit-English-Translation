@@ -1,0 +1,16 @@
+/*****************************************************************************
+
+		Copyright (c) My Company
+
+ Project:  APARNA
+ FileName: MAIN.PRE
+ Purpose: Predicate definitions for C:\APARNA\MAIN.PRO
+ Written by: Visual Prolog
+ Comments:
+******************************************************************************/
+   global predicates
+   compact(string)
+   split_sentence(string)
+   parsing(string)
+   generate_parse(integer,string)
+   translate
